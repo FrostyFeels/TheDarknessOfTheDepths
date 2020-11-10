@@ -19,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         maxSpeed = speed * sprintMultiplyer;
-        acceleration = timeToMaxSpeed / maxSpeed;
+        acceleration = (maxSpeed-speed) / timeToMaxSpeed;
 
         rb = gameObject.GetComponent<Rigidbody2D>();
     }
@@ -41,13 +41,15 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.D)) { direction = 1; } else if(Input.GetKey(KeyCode.A)) { direction = -1; } else { direction = 0; }     
 
         //makes the player slowly go faster when sprinting
-        if(sprinting)
+        if(sprinting && direction != 0)
         {
-            sprintSpeed += acceleration;
+            sprintSpeed += acceleration * Time.deltaTime;
         }
         else { sprintSpeed = speed; }
+        //Keeps the sprintspeed between -maxspeed en maxspeed
         sprintSpeed = Mathf.Clamp(sprintSpeed, -maxSpeed, maxSpeed);
 
+        //Checks if player has turned around so the sprintspeed will reset
         if (oldDirection != direction)
         {
             sprintSpeed = speed;
