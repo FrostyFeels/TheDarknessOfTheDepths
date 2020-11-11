@@ -41,7 +41,7 @@ public class PlayerJumping : MonoBehaviour
         }
 
 
-
+        //Changes gravity depeneding on if you hold the button or not
         if (rb.velocity.y < 0)
         {
             rb.gravityScale = heavyGrafity;
