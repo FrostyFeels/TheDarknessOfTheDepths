@@ -6,28 +6,72 @@ public class PlayerSlide : MonoBehaviour
 {
     Rigidbody2D rb;
     BoxCollider2D bc;
+    PlayerMovement movement;
     public Transform body;
 
     public float slideSpeed;
-    public bool isSliding;
-
+    public float slideTime; 
     public int rotation;
+    public bool isSliding;
+    public bool stopSliding;
 
     [SerializeField] LayerMask groundMask;
 
 
     void Start()
     {
+        bc = gameObject.GetComponentInChildren<BoxCollider2D>();
         rb = gameObject.GetComponent<Rigidbody2D>();
+        movement = gameObject.GetComponent<PlayerMovement>();
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S) && IsGrounded() && isSliding)
+        //Starts sliding if not already sliding and on the ground and when moving
+        //Stops sliding if jump is pressed
+        if (Input.GetKeyDown(KeyCode.S) && IsGrounded() && !isSliding && movement.direction != 0)
         {
-            body.transform.rotation = Quaternion.Euler(0f, 0f, rotation);
+            body.transform.rotation = Quaternion.Euler(0f, 0f, rotation * movement.direction);
+            StartCoroutine(StopSliding());
+            movement.enabled = false;
             isSliding = true;
+
         }
+        if(isSliding && Input.GetKeyDown(KeyCode.Space)) 
+        {
+            stopSliding = true;
+        }
+
+        if(stopSliding)
+        {
+            isSliding = false;
+            movement.enabled = true;
+            movement.Grapplespeeding = true;
+            movement.wantedSpeed = slideSpeed;
+            body.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+            stopSliding = false;
+            Debug.Log("Runs");
+        }
+
+
+    }
+
+    private void FixedUpdate()
+    {
+        if(isSliding)
+        {
+            rb.velocity = new Vector2(slideSpeed * movement.direction, rb.velocity.y);
+        }
+    }
+
+    IEnumerator StopSliding()
+    {       
+        yield return new WaitForSeconds(slideTime);
+        if(isSliding)
+        {
+            stopSliding = true;
+        }
+                   
     }
 
 

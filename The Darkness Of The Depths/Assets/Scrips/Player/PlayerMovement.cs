@@ -4,25 +4,30 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float speed, sprintSpeed;
+    public float currentSpeed, wantedSpeed;
     public float sprintMultiplyer;
-    public float maxSpeed;
-    public float acceleration;
-    public float timeToMaxSpeed;
-
+    public float maxSpeed, maxRunningSpeed , speed;
+    public float runningAcceleration, acceleration, deacceleration, airDeAcceleration;
+    public float timeToMax, timeToMaxRunningSpeed, timeToStill, airToStill;
     public int direction, oldDirection;
+    public bool Grapplespeeding;
 
-    public bool walking, sprinting;
+  
 
     Rigidbody2D rb;
+    PlayerJumping jump;
     
     // Start is called before the first frame update
     void Start()
     {
-        maxSpeed = speed * sprintMultiplyer;
-        acceleration = (maxSpeed-speed) / timeToMaxSpeed;
+        maxRunningSpeed = maxSpeed * sprintMultiplyer;
+        runningAcceleration = (maxRunningSpeed - maxSpeed) / timeToMaxRunningSpeed;
+        acceleration = (maxSpeed - speed) / timeToMax;
+        deacceleration = maxRunningSpeed / timeToStill;
+        airDeAcceleration = maxSpeed / airToStill;
 
         rb = gameObject.GetComponent<Rigidbody2D>();
+        jump = gameObject.GetComponent<PlayerJumping>();
     }
 
     // Update is called once per frame
@@ -31,43 +36,103 @@ public class PlayerMovement : MonoBehaviour
         //sets the oldDirection to the new direction
         oldDirection = direction;
 
-        //Checks if player is sprinting or walking
-        if(Input.GetKey(KeyCode.LeftShift)) 
-        {
-            sprinting = true;
-            walking = false;
-        } else { sprinting = false; walking = true; }
-
-        //Checks if the player is holding the a or d key, will return direction 0 when not holding
-        if (Input.GetKey(KeyCode.D)) { direction = 1; } else if(Input.GetKey(KeyCode.A)) { direction = -1; } else { direction = 0; }     
-
-        //makes the player slowly go faster when sprinting
-        if(sprinting && direction != 0)
-        {
-            sprintSpeed += acceleration * Time.deltaTime;
+        
+        //Gives speed to the player when he starts walking.
+        if (Input.GetKeyDown(KeyCode.D)) 
+        { 
+            currentSpeed = speed;
+            Debug.Log("Runs");
+        } else if(Input.GetKeyDown(KeyCode.A)) 
+        {  
+            currentSpeed = speed;
         }
-        else { sprintSpeed = speed; }
-        //Keeps the sprintspeed between -maxspeed en maxspeed
-        sprintSpeed = Mathf.Clamp(sprintSpeed, -maxSpeed, maxSpeed);
+        //Gives acceleration when the player is holding the key
+        if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) && !Input.GetKey(KeyCode.LeftShift))
+        {
+           currentSpeed += acceleration * Time.deltaTime;                    
+        }
+        //Gives the player deacceleration when the player is not holding any keys
+        if (!Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
+        {
+            if (jump.isGrounded())
+            {
+                currentSpeed -= deacceleration * Time.deltaTime;
+            }
+            if (!jump.isGrounded())
+            {
+                currentSpeed -= airDeAcceleration * Time.deltaTime;
+            }
+            if (currentSpeed <= 0)
+            {
+                currentSpeed = 0;
+            }
+        }
+        //Gives the player a direction that they walk towards 
+        if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A)) { direction = 1; } else if(Input.GetKey(KeyCode.A) &&!Input.GetKey(KeyCode.D)) { direction = -1; }
+        //Makes the player stand still when holding both of the keys at the same time
+        if (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.A))
+        {
+            direction = 0;
+            Debug.Log("Runs");
+        }
+
+        //Clamps the speed depending if the player is running or walking
+        if (Input.GetKey(KeyCode.LeftShift) && direction != 0)
+        {
+            currentSpeed += runningAcceleration * Time.deltaTime;
+            if(!Grapplespeeding)
+            {
+                currentSpeed = Mathf.Clamp(currentSpeed, -maxRunningSpeed, maxRunningSpeed);
+            }
+            
+        }
+        else if (!Grapplespeeding)
+        {
+            currentSpeed = Mathf.Clamp(currentSpeed, -maxSpeed, maxSpeed);
+        }
+
+        //If grappeling the player has a diffrent max speed
+        if(Grapplespeeding)
+        {
+            currentSpeed = Mathf.Clamp(currentSpeed, -wantedSpeed, wantedSpeed);
+            currentSpeed = wantedSpeed;
+            
+            if(jump.isGrounded())
+            {
+                wantedSpeed -= deacceleration * Time.deltaTime;
+            }
+            if(!jump.isGrounded())
+            {
+                wantedSpeed -= airDeAcceleration * Time.deltaTime;
+            }
+           
+
+            if(wantedSpeed <= maxRunningSpeed && Input.GetKey(KeyCode.LeftShift))
+            {
+                Grapplespeeding = false;
+            }
+
+            if (wantedSpeed <= maxSpeed && !Input.GetKey(KeyCode.LeftShift))
+            {
+                Grapplespeeding = false;
+            }
+
+
+
+        }
+
 
         //Checks if player has turned around so the sprintspeed will reset
         if (oldDirection != direction)
         {
-            sprintSpeed = speed;
+            currentSpeed = speed;
+            wantedSpeed = speed;
         }
     }
 
     private void FixedUpdate()
     {
-        if(walking)
-        {
-            rb.velocity = new Vector2(speed * direction, rb.velocity.y);
-        }
-
-        if(sprinting)
-        {
-            rb.velocity = new Vector2(sprintSpeed * direction, rb.velocity.y);
-        }
-        
+        //makes the player move
+        rb.velocity = new Vector2(currentSpeed * direction, rb.velocity.y);            
     }
 }

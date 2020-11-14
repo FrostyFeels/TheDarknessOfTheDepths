@@ -7,7 +7,7 @@ public class PlayerJumping : MonoBehaviour
     public float jumpCount;
     public float jumpForce;
 
-    public bool jump;
+    public bool jump, wallJump;
 
     public float fJumpPressedRemember;
     public float fJumpPressedRememberTime = 0.2f;
@@ -55,14 +55,14 @@ public class PlayerJumping : MonoBehaviour
             rb.gravityScale = 5f;
         }
     }
-
+    
     private void FixedUpdate()
     {
         if(jump)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             jump = false;
-        }    
+        }          
     }
 
 
