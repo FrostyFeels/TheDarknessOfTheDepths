@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Grapple : MonoBehaviour
+public class Bullet : MonoBehaviour
 {
     public float speed;
-    public PlayerGrapple grapple;
     // Start is called before the first frame update
     void Start()
     {
@@ -13,6 +12,11 @@ public class Grapple : MonoBehaviour
     }
 
     // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
     void FixedUpdate()
     {
         transform.Translate(Vector3.down * speed * Time.fixedDeltaTime);
@@ -21,10 +25,9 @@ public class Grapple : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Wall") || collision.CompareTag("Floor"))
+        if (collision.CompareTag("Wall") || collision.CompareTag("Floor"))
         {
-            grapple.Hit(collision.gameObject, transform.position);
             Destroy(gameObject);
-        }      
+        }
     }
 }

@@ -12,9 +12,12 @@ public class PlayerMovement : MonoBehaviour
     public int direction, oldDirection;
     public bool Grapplespeeding;
 
-  
+    public float rotation, runningRotation;
+
+    public Transform body;
 
     Rigidbody2D rb;
+    
     PlayerJumping jump;
     
     // Start is called before the first frame update
@@ -49,7 +52,8 @@ public class PlayerMovement : MonoBehaviour
         //Gives acceleration when the player is holding the key
         if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) && !Input.GetKey(KeyCode.LeftShift))
         {
-           currentSpeed += acceleration * Time.deltaTime;                    
+            body.transform.rotation = Quaternion.Euler(0f, 0f, rotation * direction);
+            currentSpeed += acceleration * Time.deltaTime;                    
         }
         //Gives the player deacceleration when the player is not holding any keys
         if (!Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
@@ -66,12 +70,15 @@ public class PlayerMovement : MonoBehaviour
             {
                 currentSpeed = 0;
             }
+
+            body.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         }
         //Gives the player a direction that they walk towards 
         if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A)) { direction = 1; } else if(Input.GetKey(KeyCode.A) &&!Input.GetKey(KeyCode.D)) { direction = -1; }
         //Makes the player stand still when holding both of the keys at the same time
         if (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.A))
         {
+
             direction = 0;
             Debug.Log("Runs");
         }
@@ -80,6 +87,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift) && direction != 0)
         {
             currentSpeed += runningAcceleration * Time.deltaTime;
+            body.transform.rotation = Quaternion.Euler(0f, 0f, runningRotation * direction);
             if(!Grapplespeeding)
             {
                 currentSpeed = Mathf.Clamp(currentSpeed, -maxRunningSpeed, maxRunningSpeed);
@@ -120,7 +128,6 @@ public class PlayerMovement : MonoBehaviour
 
 
         }
-
 
         //Checks if player has turned around so the sprintspeed will reset
         if (oldDirection != direction)
