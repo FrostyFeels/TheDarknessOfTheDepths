@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     public float timeToMax, timeToMaxRunningSpeed, timeToStill, airToStill;
     public int direction, oldDirection;
     public bool Grapplespeeding;
+    
 
     public float rotation, runningRotation;
 

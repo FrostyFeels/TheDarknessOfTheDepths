@@ -86,6 +86,15 @@ public class Weapon : MonoBehaviour
         angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
 
+        if(transform.position.x > cursor.position.x)
+        {
+            transform.localScale = new Vector2(1,-1);
+        }
+        if(transform.position.x < cursor.position.x)
+        {
+            transform.localScale = new Vector2(1, 1);
+        }
+
         if (reloading)
              return;
 
@@ -128,19 +137,16 @@ public class Weapon : MonoBehaviour
         if(dir.x > 0)
         {
             movement.direction = -1;
-            Debug.Log("UwU");
+            movement.currentSpeed = dir.x * knockback;
         }
         if(dir.x < 0)
         {
-            Debug.Log("OwO");
             movement.direction = 1;
+            movement.currentSpeed += -dir.x * knockback;
         }
-        rb.velocity = new Vector2(rb.velocity.x, -dir.y * knockback);
-        movement.currentSpeed = dir.x * knockback;
-        if(movement.currentSpeed < 0)
-        {
-            movement.currentSpeed = -dir.x * knockback;
-        }
+        rb.velocity += new Vector2(rb.velocity.x, -dir.y * knockback);
+        
+
         
         
         

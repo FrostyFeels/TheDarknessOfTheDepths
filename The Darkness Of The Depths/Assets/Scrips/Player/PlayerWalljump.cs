@@ -93,6 +93,7 @@ public class PlayerWalljump : MonoBehaviour
                 movement.direction = -1;
             
                 rb.velocity = new Vector2(-25, jump.jumpForce);
+                rightWall = false;
                 wallJump = false;
             }
             //If facing a wall to the left, send player to the left
@@ -104,6 +105,7 @@ public class PlayerWalljump : MonoBehaviour
 
                 rb.velocity = new Vector2(25, jump.jumpForce);
                 wallJump = false;
+                leftWall = false;
             }
         }
     }

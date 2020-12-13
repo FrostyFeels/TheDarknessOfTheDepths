@@ -16,7 +16,10 @@ public class PlayerJumping : MonoBehaviour
 
     BoxCollider2D bc;
     Rigidbody2D rb;
+    public Transform body;
     [SerializeField] LayerMask groundMask;
+
+    public bool grounded;
     
     void Start()
     {
@@ -32,13 +35,21 @@ public class PlayerJumping : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             fJumpPressedRemember = fJumpPressedRememberTime;
+            if(!isGrounded() && jumpCount > 0)
+            {
+                jump = true;
+                fJumpPressedRemember = 0f;
+                jumpCount--;
+            }
         }
         if (isGrounded() && fJumpPressedRemember > 0f)
         {
             jump = true;
             jumpCount = 1;
-            fJumpPressedRemember = 0f;
+       
         }
+
+        
 
 
         //Changes gravity depeneding on if you hold the button or not
@@ -54,6 +65,8 @@ public class PlayerJumping : MonoBehaviour
         {
             rb.gravityScale = 5f;
         }
+
+
     }
     
     private void FixedUpdate()
@@ -70,6 +83,7 @@ public class PlayerJumping : MonoBehaviour
     public bool isGrounded()
     {
         RaycastHit2D raycasthit2d = Physics2D.BoxCast(bc.bounds.center, bc.bounds.size, 0f, Vector2.down, .1f, groundMask);
+        grounded = raycasthit2d.collider;
         return raycasthit2d.collider != null;
     }
 }

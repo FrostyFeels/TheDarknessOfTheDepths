@@ -28,7 +28,6 @@ public class WeaponSwitcher : MonoBehaviour
         transform.position = player.position;
         if(Input.GetAxis("Mouse ScrollWheel") > 0)
         {
-            Debug.Log("Runs");
             if(usingRanged)
             {
                 scrollUp = true;
@@ -78,7 +77,7 @@ public class WeaponSwitcher : MonoBehaviour
                 currentRanged++;
                 ranged[currentRanged].SetActive(true);
             }
-            scrollUp = false;
+     
         }
         //When the player scrolls down check if you at the bottom, set currentweapon max if min reached
         if(scrollDown)
@@ -93,7 +92,7 @@ public class WeaponSwitcher : MonoBehaviour
                 currentRanged--;
                 ranged[currentRanged].SetActive(true);
             }
-            scrollDown = false;
+           
         }
 
         //set the other weapons off
@@ -107,6 +106,20 @@ public class WeaponSwitcher : MonoBehaviour
 
 
         //if player doesnt have the weapon unlocked dont let them use it
+        if (PlayerArsenal.CheckWeapon(ranged[currentRanged].name))
+        {
+            Debug.Log("Works: " + ranged[currentRanged].name);
+            Debug.Log("Works: " + currentRanged);
+        }
+        else
+        {
+            SwitchRanged();
+            Debug.Log("Doesnt work " + ranged[currentRanged].name);
+            Debug.Log("Doesnt work " + currentRanged);
+        }
+
+        scrollUp = false;
+        scrollDown = false;
 
     }
 

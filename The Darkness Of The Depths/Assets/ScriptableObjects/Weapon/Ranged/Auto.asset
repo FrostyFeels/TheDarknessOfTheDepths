@@ -15,7 +15,7 @@ MonoBehaviour:
   weaponName: 
   weaponSprite: {fileID: 0}
   dmg: 22
-  knockback: 2
+  knockback: 15
   armorPen: 1
   range: 30
   fireRate: 8

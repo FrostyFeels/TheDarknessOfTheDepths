@@ -20,7 +20,6 @@ public class Bullet : MonoBehaviour
     void FixedUpdate()
     {
         transform.Translate(Vector3.down * speed * Time.fixedDeltaTime);
-        Debug.Log(speed);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
