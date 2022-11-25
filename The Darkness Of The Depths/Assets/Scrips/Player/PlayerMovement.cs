@@ -5,17 +5,17 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public float currentSpeed, wantedSpeed;
-    public float sprintMultiplyer;
-    public float maxSpeed, maxRunningSpeed , speed;
-    public float runningAcceleration, acceleration, deacceleration, airDeAcceleration;
-    public float timeToMax, timeToMaxRunningSpeed, timeToStill, airToStill;
+    [SerializeField] private float sprintMultiplyer;
+    public float maxSpeed, maxRunningSpeed, speed;
+    [SerializeField] private float runningAcceleration, acceleration, deacceleration, airDeAcceleration;
+    [SerializeField] private float timeToMax, timeToMaxRunningSpeed, timeToStill, airToStill;
     public int direction, oldDirection;
     public bool Grapplespeeding;
-    
 
-    public float rotation, runningRotation;
 
-    public Transform body;
+    [SerializeField] private float rotation, runningRotation;
+
+    [SerializeField] private Transform body;
 
     Rigidbody2D rb;
     
@@ -80,13 +80,14 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.A))
         {
 
-            direction = 0;
+                ;
             Debug.Log("Runs");
         }
 
         //Clamps the speed depending if the player is running or walking
-        if (Input.GetKey(KeyCode.LeftShift) && direction != 0)
+        if (Input.GetKey(KeyCode.LeftShift) && (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)))
         {
+            Debug.Log("whyt");
             currentSpeed += runningAcceleration * Time.deltaTime;
             body.transform.rotation = Quaternion.Euler(0f, 0f, runningRotation * direction);
             if(!Grapplespeeding)

@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class PlayerWalljump : MonoBehaviour
 {
-    public float wallJumpTime = 0.2f;
-    public float wallSlideSpeed = .5f;
-    public float wallDistance = 1f;
-    public float airTime;
+    [SerializeField] private float wallJumpTime = 0.2f;
+    [SerializeField] private float wallSlideSpeed = .5f;
+    [SerializeField] private float wallDistance = 1f;
+    [SerializeField] private float airTime;
     float jumpTime;
 
-    public bool isWallSliding = false;
-    public bool wallJump;
-    public bool rightWall, leftWall;
+    private bool isWallSliding = false;
+    private bool wallJump;
+    private bool rightWall, leftWall;
 
     RaycastHit2D wallCheckHit;
     PlayerMovement movement;
@@ -26,7 +26,6 @@ public class PlayerWalljump : MonoBehaviour
 
     void Start()
     {
-
         bc = gameObject.GetComponentInChildren<BoxCollider2D>();
         rb = gameObject.GetComponent<Rigidbody2D>();
         movement = gameObject.GetComponent<PlayerMovement>();

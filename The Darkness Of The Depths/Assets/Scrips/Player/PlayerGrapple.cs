@@ -4,22 +4,22 @@ using UnityEngine;
 
 public class PlayerGrapple : MonoBehaviour
 {
-    public GameObject grappleShot;
-    public Vector2 dir;
-    public Vector2 movementDir;
-    public Vector2 hitLoction;
-    public float angle;
-    public float grappleSpeed;
-    public float shotSpeed;
-    public float range;
+    [SerializeField] private GameObject grappleShot;
+    [SerializeField] private Vector2 dir;
+    [SerializeField] private Vector2 movementDir;
+    [SerializeField] private Vector2 hitLoction;
+    [SerializeField] private float angle;
+    [SerializeField] private float grappleSpeed;
+    [SerializeField] private float shotSpeed;
+    [SerializeField] private float range;
 
 
     GameObject cursor;
     GameObject target;
     Rigidbody2D rb;
     PlayerMovement movement;
-    public LineRenderer line;
-    public bool grappeling = false;
+    [SerializeField] private LineRenderer line;
+    [SerializeField] private bool grappeling = false;
 
     // Start is called before the first frame update
     void Start()

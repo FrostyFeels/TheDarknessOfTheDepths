@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class PlayerJumping : MonoBehaviour
 {
-    public float jumpCount;
+    [SerializeField] private float jumpCount;
     public float jumpForce;
 
-    public bool jump, wallJump;
+    private bool jump;
 
-    public float fJumpPressedRemember;
-    public float fJumpPressedRememberTime = 0.2f;
+    private float fJumpPressedRemember;
+    [SerializeField] private float fJumpPressedRememberTime = 0.2f;
 
-    public float smallGravity, heavyGrafity;
+    [SerializeField] private float smallGravity, heavyGrafity;
 
     BoxCollider2D bc;
     Rigidbody2D rb;
-    public Transform body;
+    [SerializeField] private Transform body;
     [SerializeField] LayerMask groundMask;
 
     public bool grounded;

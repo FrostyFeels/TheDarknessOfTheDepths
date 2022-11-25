@@ -10,10 +10,10 @@ public class PlayerDash : MonoBehaviour
     Transform player;
     Rigidbody2D rb;
     PlayerMovement movement;
-    public float distance;
+    [SerializeField] private float distance;
 
-    public bool isDashing = false;
-    public bool cooldown = false;
+    private bool isDashing = false;
+    private bool cooldown = false;
 
     private void Start()
     {

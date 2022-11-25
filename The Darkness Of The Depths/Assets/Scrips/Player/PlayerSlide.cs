@@ -7,13 +7,13 @@ public class PlayerSlide : MonoBehaviour
     Rigidbody2D rb;
     BoxCollider2D bc;
     PlayerMovement movement;
-    public Transform body;
+    [SerializeField] private Transform body;
 
-    public float slideSpeed;
-    public float slideTime; 
-    public int rotation;
-    public bool isSliding;
-    public bool stopSliding;
+    [SerializeField] private float slideSpeed;
+    [SerializeField] private float slideTime;
+    [SerializeField] private int rotation;
+    [SerializeField] private bool isSliding;
+    [SerializeField] private bool stopSliding;
 
     [SerializeField] LayerMask groundMask;
 
